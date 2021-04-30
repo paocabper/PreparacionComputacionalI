@@ -31,8 +31,11 @@ names(country_codes)
     1. Muestre a continuación las primeras filas de dichos datasets.
 ```{r}
 head(gapminder)
+```
+```{r}
 head(country_codes)
 ```
+
 
     2. Busque en la ayuda del paquete "gapminder" el diccionario o definición de las variables que componen dichos datasets.
 Con esto en el apartado help nos dará la definicion de las variables de dichos datasets
@@ -56,43 +59,85 @@ glimpse(country_codes)
 
 2. Obtenga la esperanza de vida de los siguientes países: "Kenya", "Peru", "Syria" en el 2007, en una sola consulta con el sistema tidyverse, mostrándolos por orden decreciente de la esperanza de vida.
 ```{r}
-
+gapminder %>%
+  filter(country %in% c("Kenya", "Peru", "Syria"),year==2007) %>%
+  select(country,year,lifeExp) %>%
+  arrange(desc(lifeExp))
 ``` 
-**Pedro**
-```{r}
 
+
+3. ¿Cuántos países distintos aparecen en el dataset "gapminder"? 
+```{r}
+gapminder  %>%
+  summarise(cuantosPaises=n_distinct(country))
 ```
 
-3. ¿Cuántos países distintos aparecen en el dataset "gapminder"? ¿Cuántos países aparecen en Europa? Liste los nombres de estos últimos ordenados alfabéticamente. 
+#¿Cuántos países aparecen en Europa?
 ```{r}
-
+gapminder  %>%
+  filter(continent=="Europe")  %>%
+   summarise(DistintosEuropa=n_distinct(country))
+  
 ```
+Liste los nombres de estos últimos ordenados alfabéticamente.
 ```{r}
-#¿Cuántos países aparecen en Europa? Liste los nombres de estos últimos ordenados alfabéticamente. 
-
+gapminder %>%
+  filter(continent=="Europe")  %>%
+  select(country) %>%
+  distinct(country)  %>%
+  arrange(country)  %>%
+  pull()  %>%
+  as.character()
 ```
+
 
 
 
 4. Calcule la población total por continentes para los últimos 5 años disponibles.
 Primero voy a ver cuales son los últimos 5 años disponibles
+Vamos a ver cuales son los ultimos  5 años
 ```{r}
-
+gapminder  %>%
+  select(year) %>%
+  arrange(desc(year))  %>%
+  distinct(year) %>%
+  slice(1:5) %>%
+  pull()->ultyear
 ```
 Calcularemos a continuación la población total por continentes para los últimos 5 años disponibles.
 ```{r}
+gapminder   %>%
+  filter(year>=1987) %>%
+  group_by(continent,year) %>%
+  summarise(TotalPoblacion=sum(as.numeric(pop)))
 
 ```
 
 5. Obtenga los códigos (`iso_alpha` e `iso_num`) asociados a cada uno los países de América que aparecen en 2002, construyendo un nuevo dataset que tenga: "nombre del país", "código alpha", "código num", y "nombre (código alpha)". Presente los datos con ayuda del paquete "kableExtra".
 
 ```{r}
-
+PaisesCodigos=gapminder  %>%
+  filter(continent=="Americas",year==2002)%>%
+  select(country) %>%
+  mutate(country=as.character(country))%>%
+  left_join(country_codes)%>%
+  mutate(paiscodigo=paste0(country,"(",iso_alpha,")"))
+PaisesCodigos
 ```
-
+```{r}
+library(kableExtra)
+PaisesCodigos %>%
+  kable() %>%
+  kable_styling("condensed",full_width = F)
+```
 
 6. Represente gráficamente la evolución de la esperanza de vida de los países de Oceanía con ayuda del paquete ggplot2.
 
 ```{r}
-
+library(ggplot2)
+gapminder %>%
+  filter(continent=="Oceania") %>%
+  ggplot(aes(x=year,y=lifeExp,color=country))+
+  geom_line()+
+  labs(title="Evolucion de la esperanza de vida",subtitle="Paises de Oceania")
 ```
