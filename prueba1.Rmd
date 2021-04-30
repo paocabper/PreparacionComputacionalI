@@ -1,0 +1,211 @@
+---
+title: "Hoja 1b de problemas y prácticas con R"
+author: "Paola Cabrera Perza"
+subtitle: Estadística Computacional I. Grado en Estadística
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T)
+```
+
+En los siguientes ejercicios se debe utilizar el sistema "tidyverse" junto a los siguientes datasets de la librería "gapminder":
+
+- "gapminder"
+- "country_codes"
+
+```{r}
+library("gapminder")
+library("tidyverse")
+library("knitr")
+library("dplyr")
+```
+
+1. Muestre los nombres de las variables que tienen los dos datasets referidos. 
+```{r}
+variablegapminder<-names(gapminder)
+tabla1=cbind.data.frame(c("gapminder"),c(variablegapminder))
+colnames(tabla1)=c("Datasets", "Variable")
+kable(tabla1)
+```
+```{r}
+variablescountrycodes<-names(country_codes)
+tabla2=cbind.data.frame(c("country_codes"),c(variablescountrycodes))
+colnames(tabla2)=c("Datasets", "Variable")
+kable(tabla2)
+```
+**Pedro**
+```{r}
+names(gapminder)
+names(country_codes)
+```
+    1. Muestre a continuación las primeras filas de dichos datasets.
+```{r}
+head(gapminder)
+```
+```{r}
+head(country_codes)
+```
+
+**Pedro**
+```{r}
+head(gapminder)
+head(country_codes)
+```
+    2. Busque en la ayuda del paquete "gapminder" el diccionario o definición de las variables que componen dichos datasets.
+Con esto en el apartado help nos dará la definicion de las variables de dichos datasets
+```{r}
+?gapminder
+```    
+```{r}
+tabla=cbind.data.frame(c("country","continent","year","lifeExp","pop","gdpPercap"),c("factor with 142 levels","factor with 5 levels","ranges from 1952 to 2007 in increments of 5 years","life expectancy at birth, in years","population","GDP per capita (US$, inflation-adjusted)"))
+colnames(tabla)=c("Variables", "Definicion")
+kable(tabla)
+
+```
+```{r}
+?country_codes
+``` 
+```{r}
+tabla=cbind.data.frame(c("country","iso_alpha","iso_num"),c("factor with 142 levels","The 3-letter ISO 3166-1 alpha-3 code","The 3-digit ISO 3166-1 numeric-3 code"))
+colnames(tabla)=c("Variables", "Definicion")
+kable(tabla)
+```
+**Pedro**
+```{r eval=FALSE}
+help("gapminder",package="gapminder")
+help("country_codes",package="gapminder")
+```
+
+    3. Muestre las primeras filas junto al tipo de objeto de cada una de las variables.
+```{r}
+str(gapminder)
+``` 
+```{r}
+str(country_codes)
+``` 
+**Pedro**
+```{r}
+glimpse(gapminder)
+glimpse(country_codes)
+```
+
+
+2. Obtenga la esperanza de vida de los siguientes países: "Kenya", "Peru", "Syria" en el 2007, en una sola consulta con el sistema tidyverse, mostrándolos por orden decreciente de la esperanza de vida.
+```{r}
+mifiltro<-filter(gapminder, year==2007,country %in% c("Kenya", "Peru","Syria"))
+filtro_ordenado <- mifiltro[order(-mifiltro$lifeExp), ]
+select(filtro_ordenado,country,year,lifeExp)
+``` 
+**Pedro**
+```{r}
+gapminder %>%
+  filter(country %in% c("Kenya", "Peru","Syria"), year==2007) %>%
+  select(country, year, lifeExp) %>%
+  arrange(desc(lifeExp))
+```
+
+3. ¿Cuántos países distintos aparecen en el dataset "gapminder"? ¿Cuántos países aparecen en Europa? Liste los nombres de estos últimos ordenados alfabéticamente. 
+```{r}
+paises<-distinct(gapminder,country)
+count(paises)
+tabla3=cbind.data.frame("Paises",count(paises))
+colnames(tabla3)=c("Paises distintos", "Cantidad")
+kable(tabla3)
+``` 
+```{r}
+paiseseuropa<-filter(gapminder,continent=="Europe")
+distintpaiseseuropa<- distinct(paiseseuropa,country)
+tabla4=cbind.data.frame("Paises Europa",count(distintpaiseseuropa))
+colnames(tabla4)=c("Paises distintos en Europa", "Cantidad")
+kable(tabla4)
+``` 
+```{r}
+kable(distintpaiseseuropa)
+```
+**Pedro**
+```{r}
+#¿Cuántos países distintos aparecen en el dataset gapminder?
+gapminder %>%
+  summarise(cuantosPaises = n_distinct(country))
+```
+```{r}
+#¿Cuántos países aparecen en Europa? Liste los nombres de estos últimos ordenados alfabéticamente. 
+#gapminder %>%
+#  distinct(continent)
+gapminder %>%
+  filter(continent=="Europe") %>%
+  summarise(CuantosPaisesEur=n_distinct(country))
+
+```
+```{r}
+gapminder %>%
+  filter(continent=="Europe") %>%
+  select(country) %>%
+  distinct(country) %>%
+  arrange(country) %>%
+  pull() %>%
+  as.character()
+```
+
+
+
+4. Calcule la población total por continentes para los últimos 5 años disponibles.
+Primero voy a ver cuales son los últimos 5 años disponibles
+```{r}
+años<-distinct(gapminder,year)
+años
+tail(años,5)
+```
+Calcularemos a continuación la población total por continentes para los últimos 5 años disponibles.
+```{r}
+cadaaño <- filter(gapminder,year %in%  c("1987","1992","1997","2002","2007")) %>%
+group_by(continent,year) %>%  
+  summarise(sum(pop))
+cadaaño
+```
+**Pedro**
+```{r warning=FALSE}
+gapminder %>%
+  select(year) %>%
+  distinct(year) %>%
+  arrange(desc(year))%>%
+  slice(1:5)%>%
+  pull()->ultyears
+gapminder %>%
+  filter(year>=1987) %>%
+  group_by(continent,year)%>%
+  summarise(TotalPoblacion=sum(pop))
+```
+
+5. Obtenga los códigos (`iso_alpha` e `iso_num`) asociados a cada uno los países de América que aparecen en 2002, construyendo un nuevo dataset que tenga: "nombre del país", "código alpha", "código num", y "nombre (código alpha)". Presente los datos con ayuda del paquete "kableExtra".
+
+```{r}
+combine<-full_join(gapminder,country_codes,by="country") %>%
+  print()
+america2002<-filter(combine,continent=="Americas",year=="2002")
+america2002
+newamerica<-select (america2002,country,iso_alpha,iso_num)
+kable(newamerica)
+```
+
+**Pedro**
+```{r}
+PaisesCodigo=gapminder %>%
+  filter(year==2002,continent=="Americas") %>%
+  select(country)%>%
+  mutate(country=as.character(country)) %>%
+  left_join(country_codes) %>%
+  mutate(paiscodigo=paste0(country,"(",iso_alpha,")"))
+PaisesCodigo
+```
+6. Represente gráficamente la evolución de la esperanza de vida de los países de Oceanía con ayuda del paquete ggplot2.
+
+```{r}
+paisesoceania<-filter(gapminder,continent=="Oceania")
+paisesoceania
+ggplot(data=paisesoceania, aes(year,lifeExp,colour=country))+ geom_point() +
+stat_smooth()
+```
