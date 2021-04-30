@@ -5,3 +5,5 @@
 PreparacionComputacionalI.Rproj
 *.html
 *.pdf
+*.log
+*.tex

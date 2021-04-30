@@ -1,0 +1,98 @@
+---
+title: "PruebaPrimera"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+title: "Hoja 1b de problemas y prácticas con R"
+author: "Paola Cabrera Perza"
+subtitle: Estadística Computacional I. Grado en Estadística
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T)
+```
+
+En los siguientes ejercicios se debe utilizar el sistema "tidyverse" junto a los siguientes datasets de la librería "gapminder":
+
+- "gapminder"
+- "country_codes"
+
+```{r}
+library("gapminder")
+library("tidyverse")
+library("knitr")
+library("dplyr")
+```
+
+1. Muestre los nombres de las variables que tienen los dos datasets referidos. 
+```{r}
+
+```
+
+    1. Muestre a continuación las primeras filas de dichos datasets.
+```{r}
+
+```
+
+    2. Busque en la ayuda del paquete "gapminder" el diccionario o definición de las variables que componen dichos datasets.
+Con esto en el apartado help nos dará la definicion de las variables de dichos datasets
+```{r}
+
+```
+
+    3. Muestre las primeras filas junto al tipo de objeto de cada una de las variables.
+```{r}
+
+``` 
+
+
+2. Obtenga la esperanza de vida de los siguientes países: "Kenya", "Peru", "Syria" en el 2007, en una sola consulta con el sistema tidyverse, mostrándolos por orden decreciente de la esperanza de vida.
+```{r}
+
+``` 
+**Pedro**
+```{r}
+
+```
+
+3. ¿Cuántos países distintos aparecen en el dataset "gapminder"? ¿Cuántos países aparecen en Europa? Liste los nombres de estos últimos ordenados alfabéticamente. 
+```{r}
+
+```
+```{r}
+#¿Cuántos países aparecen en Europa? Liste los nombres de estos últimos ordenados alfabéticamente. 
+
+```
+
+
+
+4. Calcule la población total por continentes para los últimos 5 años disponibles.
+Primero voy a ver cuales son los últimos 5 años disponibles
+```{r}
+
+```
+Calcularemos a continuación la población total por continentes para los últimos 5 años disponibles.
+```{r}
+
+```
+
+5. Obtenga los códigos (`iso_alpha` e `iso_num`) asociados a cada uno los países de América que aparecen en 2002, construyendo un nuevo dataset que tenga: "nombre del país", "código alpha", "código num", y "nombre (código alpha)". Presente los datos con ayuda del paquete "kableExtra".
+
+```{r}
+
+```
+
+
+6. Represente gráficamente la evolución de la esperanza de vida de los países de Oceanía con ayuda del paquete ggplot2.
+
+```{r}
+
+```
