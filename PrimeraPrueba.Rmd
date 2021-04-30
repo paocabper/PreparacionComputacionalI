@@ -1,14 +1,4 @@
----
-title: "PruebaPrimera"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
----
-title: "Hoja 1b de problemas y prácticas con R"
+title: "PrimeraPrueba"
 author: "Paola Cabrera Perza"
 subtitle: Estadística Computacional I. Grado en Estadística
 output:
@@ -34,24 +24,34 @@ library("dplyr")
 
 1. Muestre los nombres de las variables que tienen los dos datasets referidos. 
 ```{r}
-
+names(gapminder)
+names(country_codes)
 ```
 
     1. Muestre a continuación las primeras filas de dichos datasets.
 ```{r}
-
+head(gapminder)
+head(country_codes)
 ```
 
     2. Busque en la ayuda del paquete "gapminder" el diccionario o definición de las variables que componen dichos datasets.
 Con esto en el apartado help nos dará la definicion de las variables de dichos datasets
 ```{r}
-
+help("gapminder",package="gapminder")
+?gapminder
+help("country_codes",package="gapminder")
 ```
+
+
 
     3. Muestre las primeras filas junto al tipo de objeto de cada una de las variables.
 ```{r}
-
+glimpse(gapminder)
 ``` 
+```{r}
+glimpse(country_codes)
+```
+
 
 
 2. Obtenga la esperanza de vida de los siguientes países: "Kenya", "Peru", "Syria" en el 2007, en una sola consulta con el sistema tidyverse, mostrándolos por orden decreciente de la esperanza de vida.
